@@ -1,0 +1,104 @@
+import PySimpleGUI as sg
+from main import MaxHeap, MinHeap, prices
+
+# template/UI inspired by https://realpython.com/pysimplegui-python/
+# initializing
+maxHeap = MaxHeap()
+minHeap = MinHeap()
+for price, click in prices:
+    maxHeap.insert((price, click))
+    minHeap.insert((price, click))
+
+# setting color
+sg.theme('lightblue')
+
+# inside window
+layout = [
+    [
+
+
+        sg.Column(
+            [
+                [sg.Text('Details About Order', font=('Verdana', 14, 'bold'), pad=(0, 10),background_color='white')],
+                [sg.Text('•Order ID:', font=('Verdana', 12), background_color='white'),
+                 sg.Text(size=(10, 1), key='ORDER_ID', background_color='white')],
+                [sg.Text('•Country:', font=('Verdana', 12), background_color='white'),
+                 sg.Text(size=(10, 1), key='COUNTRY', background_color='white')],
+                [sg.Text('•Number of Clicks:', font=('Verdana', 12),background_color='white'), sg.Text(size=(10,1), key='CLICKS', background_color='white')],
+                [sg.Text('•Page #:',font=('Verdana', 12),background_color='white'), sg.Text(size=(10,1), key='PAGE', background_color='white')],
+            ],
+            background_color='white',
+            pad=(10, 10),
+            size=(300, 180),
+            element_justification='left',
+            vertical_alignment= 'top'
+        ),
+        sg.VSeparator(),  # vertical separator
+        sg.Column(
+            [
+
+                [sg.Text('Lowest Priced Order:', font=('Verdana', 12, 'bold'))],
+                [
+                    sg.Column(  # Create a white rectangle for price display
+                        [[sg.Text(size=(8, 1), font=('Verdana', 12), background_color='white', text_color='black',
+                                  key='LOWPRICE')]],
+                        background_color='white',
+                        pad=(0, 0)
+                    )
+                    #size only to million
+                ],
+                [sg.Text("", size=(1, 1))],
+                [sg.Button('Find Lowest Price', font=('Verdana', 12, 'bold'), button_color=('white', 'green'),
+                           border_width=4)],
+
+                [sg.HSeparator()],
+
+                [sg.Text('Highest Priced Order:', font=('Verdana', 12, 'bold'))],
+[
+                    sg.Column(  # Create a white rectangle for price display
+                        [[sg.Text(size=(8, 1), font=('Verdana', 12), background_color='white', text_color='black', key='HIGHPRICE')]],
+                        background_color='white',
+                        pad=(0, 0),
+                    )
+                ],
+            [sg.Text("", size=(1, 1))],
+            [sg.Button('Find Highest Price', font=('Verdana', 12, 'bold'), button_color=('white', 'red'),
+                           border_width=4)],
+            ],
+
+            element_justification='center',
+            expand_y=True,
+
+        )
+    ]
+]
+
+# window
+window = sg.Window('Product Recommender', layout, location=(600, 300))
+# while window is open
+while True:
+    event, values = window.read()
+    if event == sg.WIN_CLOSED:  # if window closed
+        break
+    elif event == 'Find Lowest Price':
+    # min heap logic
+        if minHeap.heap:
+            minPrice, minClicks = minHeap.extractMin()
+            window['LOWPRICE'].update(f"${minPrice:.2f}")  # Update lowest price
+            #window['ORDER_ID'].update(order_id)
+            #window['COUNTRY'].update(country)
+            #window['PAGE2'].update(page2)
+            window['CLICKS'].update(minClicks)
+
+
+    elif event == 'Find Highest Price':
+        # max heap logic
+        if maxHeap.heap:
+            maxPrice, maxClicks = maxHeap.extractMax()
+            window['HIGHPRICE'].update(maxPrice)
+            window['CLICKS'].update(maxClicks)
+            #window['ORDER_ID'].update(order_id)
+            #window['COUNTRY'].update(country)
+            #window['PAGE2'].update(page2)
+
+window.close()
