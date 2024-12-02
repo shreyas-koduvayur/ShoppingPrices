@@ -59,10 +59,17 @@ class MaxHeap:
             self.heap[i], self.heap[largest] = self.heap[largest], self.heap[i]
             self.heapifyDown(largest)
 
+#start the timer
+startMax = time.time();
+
 # Build max heap
 maxHeap = MaxHeap()
 for price, click, order_id, country, page in prices:
     maxHeap.insert((price, click, order_id, country, page))
+
+#end timer
+endMax = time.time();
+maxTime = startMin-endMin;
 
 # Find the most expensive purchase and its clicks
 if maxHeap.heap:
@@ -106,11 +113,17 @@ class MinHeap:
         if smallest!= index:
             self.heap[index],self.heap[smallest]=self.heap[smallest],self.heap[index]
             self.heapifyDown(smallest)
-
+            
+#start the timer
+startMin = time.time();
 
 minHeap=MinHeap()
 for price, click, order_id, country, page in prices:
     minHeap.insert((price, click, order_id, country, page))
+
+# end timer
+endMin = time.time();
+minTime = startMin - endMin;
 
 if minHeap.heap:
     minPrice, minClicks, order_id, country, page = minHeap.extractMin()
