@@ -77,7 +77,7 @@ class MinHeap:
         self.bubbleUp(len(self.heap)-1)
 
     def extractMin(self):
-        if len(self.heap)==0:
+        if len(self.heap) ==0:
             return None
         if len(self.heap)==1:
             return self.heap.pop()
