@@ -68,6 +68,7 @@ else:
     maxPrice, maxClicks = None, None
 
 #I am storing my maxPrice and maxClicks here. Everytime the button is pushed, line 66 needs to be run again. Other than that, everything else should work. Lmk if I need to make any changes.
+
 class MinHeap:
     def __init__(self):
         self.heap=[]
