@@ -1,6 +1,6 @@
 import csv
 
-fileName = 'data.csv'
+fileName = 'e-shop clothing 2008.csv'
 prices = []
 clicks = []
 
