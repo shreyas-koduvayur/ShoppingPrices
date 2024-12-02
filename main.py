@@ -68,3 +68,49 @@ else:
     maxPrice, maxClicks = None, None
 
 #I am storing my maxPrice and maxClicks here. Everytime the button is pushed, line 66 needs to be run again. Other than that, everything else should work. Lmk if I need to make any changes.
+class MinHeap:
+    def __init__(self):
+        self.heap=[]
+
+    def insert(self,val):
+        self.heap.append(val)
+        self.bubbleUp(len(self.heap)-1)
+
+    def extractMin(self):
+        if len(self.heap) ==0:
+            return None
+        if len(self.heap)==1:
+            return self.heap.pop()
+        val=self.heap[0]
+        self.heap[0]=self.heap.pop()
+        self.heapifyDown(0)
+        return val
+    def bubbleUp(self,index):
+        parent=(index-1)//2
+        while index>0 and self.heap[index][0]<self.heap[parent][0]:
+            self.heap[index],self.heap[parent]=self.heap[parent], self.heap[index]
+            index=parent
+            parent=(index-1)//2
+
+
+    def heapifyDown(self,index):
+        smallest=index
+        left= 2*index +1
+        right=2 * index +2
+        if left<len(self.heap) and self.heap[left][0] <self.heap[smallest][0]:
+            smallest=left
+        if right<len(self.heap) and self.heap[right][0]<self.heap[smallest][0]:
+            smallest=right
+        if smallest!= index:
+            self.heap[index],self.heap[smallest]=self.heap[smallest],self.heap[index]
+            self.heapifyDown(smallest)
+
+
+minHeap=MinHeap()
+for price, click in prices:
+    minHeap.insert((price,click))
+
+if minHeap.size()>0:
+    minPrice, minClicks= minHeap.extractMin()
+else:
+    minPrice, minClicks=None, None
