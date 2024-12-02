@@ -5,20 +5,19 @@ from main import MaxHeap, MinHeap, prices
 # initializing
 maxHeap = MaxHeap()
 minHeap = MinHeap()
-for price, click in prices:
-    maxHeap.insert((price, click))
-    minHeap.insert((price, click))
+for price, click, order_id, country, page in prices:
+    maxHeap.insert((price, click, order_id, country, page))
+    minHeap.insert((price, click, order_id, country, page))
 
 # setting color
 sg.theme('lightblue')
 
-# inside window
+# inside window inspired content by https://www.tutorialspoint.com/pysimplegui/pysimplegui_window_class.htm
 layout = [
     [
-
-
-        sg.Column(
+        sg.Column( # left side of UI
             [
+                # padding info https://www.geeksforgeeks.org/how-to-add-padding-to-a-tkinter-widget-only-on-one-side/
                 [sg.Text('Details About Order', font=('Verdana', 14, 'bold'), pad=(0, 10),background_color='white')],
                 [sg.Text('•Order ID:', font=('Verdana', 12), background_color='white'),
                  sg.Text(size=(10, 1), key='ORDER_ID', background_color='white')],
@@ -27,52 +26,43 @@ layout = [
                 [sg.Text('•Number of Clicks:', font=('Verdana', 12),background_color='white'), sg.Text(size=(10,1), key='CLICKS', background_color='white')],
                 [sg.Text('•Page #:',font=('Verdana', 12),background_color='white'), sg.Text(size=(10,1), key='PAGE', background_color='white')],
             ],
-            background_color='white',
+            # for controlling layout https://docs.pysimplegui.com/en/latest/documentation/module/layouts/
+            background_color='white', #white box around everything
             pad=(10, 10),
             size=(300, 180),
             element_justification='left',
             vertical_alignment= 'top'
         ),
-        sg.VSeparator(),  # vertical separator
+        sg.VSeparator(),  # vertical separator for right side with outputs
         sg.Column(
             [
-
                 [sg.Text('Lowest Priced Order:', font=('Verdana', 12, 'bold'))],
-                [
-                    sg.Column(  # Create a white rectangle for price display
+                [ # tools used https://docs.pysimplegui.com/en/latest/call_reference/tkinter/elements/column/
+                    sg.Column(  # white rectangle for background design, nested columns for design https://docs.pysimplegui.com/en/latest/cookbook/original/multiple_columns/
                         [[sg.Text(size=(8, 1), font=('Verdana', 12), background_color='white', text_color='black',
-                                  key='LOWPRICE')]],
-                        background_color='white',
-                        pad=(0, 0)
-                    )
-                    #size only to million
+                                  key='LOWPRICE')]], background_color='white', pad=(0, 0)
+                    ) #size only to million
                 ],
                 [sg.Text("", size=(1, 1))],
                 [sg.Button('Find Lowest Price', font=('Verdana', 12, 'bold'), button_color=('white', 'green'),
-                           border_width=4)],
-
+                           border_width=4)], #button for finding lowest price
                 [sg.HSeparator()],
-
                 [sg.Text('Highest Priced Order:', font=('Verdana', 12, 'bold'))],
 [
-                    sg.Column(  # Create a white rectangle for price display
-                        [[sg.Text(size=(8, 1), font=('Verdana', 12), background_color='white', text_color='black', key='HIGHPRICE')]],
-                        background_color='white',
+                    sg.Column(  # white rectangle for output box
+                        [[sg.Text(size=(8, 1), font=('Verdana', 12), background_color='white', text_color='black', key='HIGHPRICE')]], background_color='white',
                         pad=(0, 0),
                     )
                 ],
-            [sg.Text("", size=(1, 1))],
+            [sg.Text("", size=(1, 1))], #spacing gap
             [sg.Button('Find Highest Price', font=('Verdana', 12, 'bold'), button_color=('white', 'red'),
-                           border_width=4)],
+                           border_width=4)], #button for finding highest price
             ],
-
             element_justification='center',
             expand_y=True,
-
         )
     ]
 ]
-
 # window
 window = sg.Window('Product Recommender', layout, location=(600, 300))
 # while window is open
@@ -83,22 +73,19 @@ while True:
     elif event == 'Find Lowest Price':
     # min heap logic
         if minHeap.heap:
-            minPrice, minClicks = minHeap.extractMin()
-            window['LOWPRICE'].update(f"${minPrice:.2f}")  # Update lowest price
-            #window['ORDER_ID'].update(order_id)
-            #window['COUNTRY'].update(country)
-            #window['PAGE2'].update(page2)
-            window['CLICKS'].update(minClicks)
-
-
+            minPrice, minClicks, order_id, country, page = minHeap.extractMin()
+            window['LOWPRICE'].update(f"${minPrice:.2f}")  # lowest price
+            window['ORDER_ID'].update(order_id) #orderid
+            window['COUNTRY'].update(country) #countryid
+            window['PAGE'].update(page) #page#
+            window['CLICKS'].update(minClicks) #clicks
     elif event == 'Find Highest Price':
         # max heap logic
         if maxHeap.heap:
-            maxPrice, maxClicks = maxHeap.extractMax()
-            window['HIGHPRICE'].update(maxPrice)
+            maxPrice, maxClicks, order_id, country, page = maxHeap.extractMax()
+            window['HIGHPRICE'].update(f"${maxPrice:.2f}") # highest price
             window['CLICKS'].update(maxClicks)
-            #window['ORDER_ID'].update(order_id)
-            #window['COUNTRY'].update(country)
-            #window['PAGE2'].update(page2)
-
+            window['ORDER_ID'].update(order_id)
+            window['COUNTRY'].update(country)
+            window['PAGE'].update(page)
 window.close()
