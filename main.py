@@ -112,7 +112,7 @@ minHeap=MinHeap()
 for price, click, order_id, country, page in prices:
     minHeap.insert((price, click, order_id, country, page))
 
-if minHeap.size()>0:
+if minHeap.heap:
     minPrice, minClicks, order_id, country, page = minHeap.extractMin()
 else:
     minPrice, minClicks=None, None, None, None, None
